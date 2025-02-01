@@ -26,11 +26,11 @@ jobs:
         with:
           node-version: "20"
           
-      - name: Install dependencies
+      - name: Clean install dependencies
         run: |
+          rm -rf node_modules package-lock.json
           npm install
-          npm install @astrojs/tailwind@^5.1.0
-          npm install tailwindcss@^3.4.1
+          npm install @rollup/rollup-linux-x64-gnu
         
       - name: Build website
         run: npm run build
