@@ -1,8 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AuraNavbar from '../components/AuraNavbar';
-import { Image } from 'astro:assets';
-import auraLogo from '@assets/images/logos/Aura-Logo.webp';
+import auraLogo from '../assets/images/logos/Aura-Logo.webp';
 
 // Definimos los colores de AURA como constantes
 const AURA_COLORS = {
@@ -145,12 +144,15 @@ const valueProposition = {
       <div class="container mx-auto px-4 relative mt-20">
         <div class="max-w-4xl mx-auto text-center" transition:name="aura-card">
           <div class="relative w-32 h-32 mx-auto mb-8">
-            <Image 
-              src={auraLogo}
+            <img 
+              src={auraLogo.src}
               alt="AURA Logo"
-              width={128}
-              height={128}
+              width="128"
+              height="128"
               class="w-full h-full object-contain animate-float"
+              decoding="async"
+              loading="eager"
+              transition:name="aura-banner"
             />
           </div>
           
