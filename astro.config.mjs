@@ -10,6 +10,16 @@ export default defineConfig({
   site: 'https://freakscode-co.github.io',
   base: '/freakscode-landing',
   build: {
-    assets: 'assets'
+    assets: '_assets'
+  },
+  vite: {
+    build: {
+      assetsDir: '_assets',
+      rollupOptions: {
+        output: {
+          assetFileNames: '_assets/[name][extname]'
+        }
+      }
+    }
   }
 });
