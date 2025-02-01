@@ -10,7 +10,11 @@ export default defineConfig({
   site: 'https://freakscode-co.github.io',
   base: '/freakscode-landing',
   build: {
-    assets: '_assets'
+    assets: 'assets'
+  },
+  image: {
+    domains: ['freakscode-co.github.io'],
+    remotePatterns: [{ protocol: 'https' }]
   },
   vite: {
     build: {
