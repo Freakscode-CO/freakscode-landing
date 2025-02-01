@@ -7,8 +7,8 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   integrations: [react(), tailwind()],
-  site: 'https://freakscode-co.github.io',
-  base: '/freakscode-landing',
+  site: 'https://freakscode.tech',
+  base: '/',
   build: {
     assets: 'assets'
   },
