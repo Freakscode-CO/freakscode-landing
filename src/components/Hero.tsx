@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import auraLogo from '../assets/images/logos/Aura-Logo.webp';
+import auraLogo from '../assets/images/logos/AURA-Logo.webp';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
