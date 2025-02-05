@@ -1,0 +1,249 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AuraNavbar from '../components/AuraNavbar';
+
+// Definimos los colores de AURA como constantes
+const AURA_COLORS = {
+  primary: '#AA49CC',
+  secondary: '#7CE0C8',
+  accent: '#FFC33F',
+  text: {
+    light: '#FDFDF7',
+    muted: '#E2E2E0',
+    dark: '#2A1B3D'
+  }
+};
+
+// Recuperamos el email de la URL si existe
+const emailFromURL = Astro.url.searchParams.get('email') || '';
+---
+
+<Layout title="AURA - Registro de Interés">
+  <main class="min-h-screen bg-gradient-to-br from-[#AA49CC] via-[#CB629A] to-[#ED9263]">
+    
+    <div class="container mx-auto px-4 py-16">
+      <div class="max-w-2xl mx-auto">
+        <div class="relative group">
+          <!-- Gradient border effect -->
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-[#7CE0C8] via-[#FFC33F] to-[#97DDAB] rounded-xl opacity-75 group-hover:opacity-100 transition duration-300"></div>
+          
+          <div class="relative bg-[#2A1B3D]/95 backdrop-blur-sm p-8 rounded-xl">
+            <h1 class="text-3xl font-bold text-[#FDFDF7] mb-6 text-center">
+              Únete a la lista de espera de <span class="text-[#FFC33F]">AURA</span>
+            </h1>
+            
+            <form class="space-y-6" id="registroForm">
+              <div>
+                <label for="nombre" class="block text-[#E2E2E0] mb-2">Nombre completo</label>
+                <input 
+                  type="text" 
+                  id="nombre" 
+                  name="nombre" 
+                  required
+                  class="w-full px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-[#FDFDF7] placeholder-[#E2E2E0]/50 focus:outline-none focus:ring-2 focus:ring-[#7CE0C8] focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label for="email" class="block text-[#E2E2E0] mb-2">Correo electrónico</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  value={emailFromURL}
+                  required
+                  class="w-full px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-[#FDFDF7] placeholder-[#E2E2E0]/50 focus:outline-none focus:ring-2 focus:ring-[#7CE0C8] focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label for="edad" class="block text-[#E2E2E0] mb-2">Edad</label>
+                <input 
+                  type="number" 
+                  id="edad" 
+                  name="edad" 
+                  min="18" 
+                  max="100" 
+                  required
+                  class="w-full px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-[#FDFDF7] placeholder-[#E2E2E0]/50 focus:outline-none focus:ring-2 focus:ring-[#7CE0C8] focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label for="ocupacion" class="block text-[#E2E2E0] mb-2">Ocupación</label>
+                <select 
+                  id="ocupacion" 
+                  name="ocupacion" 
+                  required
+                  class="w-full px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-[#FDFDF7] placeholder-[#E2E2E0]/50 focus:outline-none focus:ring-2 focus:ring-[#7CE0C8] focus:border-transparent appearance-none cursor-pointer"
+                  style="background: rgba(255, 255, 255, 0.1) url('data:image/svg+xml;charset=utf-8,%3Csvg width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22 fill=%22none%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M1 1.5L6 6.5L11 1.5%22 stroke=%22%23E2E2E0%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E') no-repeat right 1rem center"
+                >
+                  <option value="" disabled selected class="bg-[#2A1B3D] text-[#E2E2E0]">Selecciona tu ocupación</option>
+                  <option value="estudiante" class="bg-[#2A1B3D] text-[#E2E2E0]">Estudiante</option>
+                  <option value="profesional" class="bg-[#2A1B3D] text-[#E2E2E0]">Profesional</option>
+                  <option value="independiente" class="bg-[#2A1B3D] text-[#E2E2E0]">Trabajador Independiente</option>
+                  <option value="emprendedor" class="bg-[#2A1B3D] text-[#E2E2E0]">Emprendedor</option>
+                  <option value="sin_profesion" class="bg-[#2A1B3D] text-[#E2E2E0]">Sin Profesión</option>
+                  <option value="otro" class="bg-[#2A1B3D] text-[#E2E2E0]">Otro</option>
+                </select>
+              </div>
+
+              <div id="otra_ocupacion" class="hidden">
+                <label for="ocupacion_detalle" class="block text-[#E2E2E0] mb-2">Especifica tu ocupación</label>
+                <input 
+                  type="text" 
+                  id="ocupacion_detalle" 
+                  name="ocupacion_detalle" 
+                  class="w-full px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-[#FDFDF7] placeholder-[#E2E2E0]/50 focus:outline-none focus:ring-2 focus:ring-[#7CE0C8] focus:border-transparent"
+                  placeholder="Describe tu ocupación..."
+                />
+              </div>
+
+              <div>
+                <label class="block text-[#E2E2E0] mb-2">Sistema operativo móvil</label>
+                <div class="flex gap-4">
+                  <label class="flex items-center">
+                    <input 
+                      type="radio" 
+                      name="sistema" 
+                      value="android" 
+                      required
+                      class="mr-2 text-[#7CE0C8] focus:ring-[#7CE0C8]"
+                    />
+                    <span class="text-[#E2E2E0]">Android</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input 
+                      type="radio" 
+                      name="sistema" 
+                      value="ios" 
+                      required
+                      class="mr-2 text-[#7CE0C8] focus:ring-[#7CE0C8]"
+                    />
+                    <span class="text-[#E2E2E0]">iOS</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label for="razones" class="block text-[#E2E2E0] mb-2">¿Por qué te interesa probar AURA?</label>
+                <textarea 
+                  id="razones" 
+                  name="razones" 
+                  required
+                  rows="4"
+                  placeholder="Cuéntanos qué te motiva a ser parte de AURA y cómo crees que podría ayudarte en tu bienestar..."
+                  class="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-[#FDFDF7] placeholder-[#E2E2E0]/50 focus:outline-none focus:ring-2 focus:ring-[#7CE0C8] focus:border-transparent resize-none"
+                ></textarea>
+                <p class="text-sm text-[#E2E2E0]/60 mt-2">
+                  Tu respuesta nos ayudará a entender mejor tus necesidades y expectativas.
+                </p>
+              </div>
+
+              <button 
+                type="submit"
+                class="w-full px-6 py-3 bg-[#FFC33F] hover:bg-[#FFC33F]/90 text-[#2A1B3D] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105"
+              >
+                Enviar registro
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  document.getElementById('registroForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const form = e.target as HTMLFormElement;
+    const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    
+    try {
+      // Deshabilitamos el botón y cambiamos el texto
+      submitButton.disabled = true;
+      submitButton.innerHTML = `
+        <span class="inline-flex items-center">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-[#2A1B3D]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Enviando...
+        </span>
+      `;
+
+      // Recopilamos los datos del formulario
+      const ocupacionSelect = form.querySelector('#ocupacion') as HTMLSelectElement;
+      const ocupacionDetalle = form.querySelector('#ocupacion_detalle') as HTMLInputElement;
+      
+      const formData = {
+        nombre: (form.querySelector('#nombre') as HTMLInputElement).value,
+        email: (form.querySelector('#email') as HTMLInputElement).value,
+        edad: (form.querySelector('#edad') as HTMLInputElement).value,
+        ocupacion: ocupacionSelect.value === 'otro' 
+          ? `Otro: ${ocupacionDetalle.value}`
+          : ocupacionSelect.value,
+        sistema: (form.querySelector('input[name="sistema"]:checked') as HTMLInputElement).value,
+        razones: (form.querySelector('#razones') as HTMLTextAreaElement).value,
+        fecha_registro: new Date().toISOString()
+      };
+
+      // URL de tu Google Apps Script Web App (deberás reemplazar esta URL)
+      const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw0tuFpw3oLXUFA8qZh3RznsU4IJA4N39we965AJIzS5kjsT8sgtWp2I0O4u6r0MtOrzg/exec';
+      
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      // Mostramos mensaje de éxito sin esperar respuesta JSON
+      form.innerHTML = `
+        <div class="text-center space-y-4">
+          <div class="w-16 h-16 bg-[#7CE0C8]/20 rounded-full flex items-center justify-center mx-auto">
+            <svg class="w-8 h-8 text-[#7CE0C8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-[#7CE0C8]">¡Registro Exitoso!</h3>
+          <p class="text-[#E2E2E0]">
+            Gracias por tu interés en AURA. Te contactaremos pronto con más información.
+          </p>
+        </div>
+      `;
+
+    } catch (error) {
+      console.error('Error específico:', error);
+      
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-[#FDFDF7] text-center mt-4';
+      errorDiv.innerHTML = 'Hubo un error al enviar el formulario. Por favor, intenta nuevamente.';
+      
+      form.appendChild(errorDiv);
+      submitButton.disabled = false;
+      submitButton.innerHTML = 'Enviar registro';
+    }
+  });
+
+  const ocupacionSelect = document.getElementById('ocupacion');
+  const otraOcupacionDiv = document.getElementById('otra_ocupacion');
+
+  ocupacionSelect?.addEventListener('change', (e) => {
+    const target = e.target as HTMLSelectElement;
+    if (target.value === 'otro') {
+      otraOcupacionDiv?.classList.remove('hidden');
+      const ocupacionDetalle = document.getElementById('ocupacion_detalle') as HTMLInputElement;
+      ocupacionDetalle.required = true;
+    } else {
+      otraOcupacionDiv?.classList.add('hidden');
+      const ocupacionDetalle = document.getElementById('ocupacion_detalle') as HTMLInputElement;
+      ocupacionDetalle.required = false;
+      ocupacionDetalle.value = '';
+    }
+  });
+</script> 

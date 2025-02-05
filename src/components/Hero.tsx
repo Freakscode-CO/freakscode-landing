@@ -7,7 +7,7 @@ const Hero = () => {
 
   useEffect(() => {
     setIsVisible(true);
-
+    
     const handleScroll = () => {
       const sections = ['inicio', 'nosotros', 'productos'];
       const currentPosition = window.scrollY + window.innerHeight / 2;
@@ -23,25 +23,8 @@ const Hero = () => {
       });
     };
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const sections = ['inicio', 'nosotros', 'productos'];
-      if (e.deltaY > 0) {
-        const nextSection = sections[(currentSection + 1) % sections.length];
-        document.getElementById(nextSection)?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        const prevSection = sections[(currentSection - 1 + sections.length) % sections.length];
-        document.getElementById(prevSection)?.scrollIntoView({ behavior: 'smooth' });
-      }
-    };
-
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('wheel', handleWheel);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [currentSection]);
 
   const scrollToNextSection = () => {
@@ -51,7 +34,11 @@ const Hero = () => {
   };
 
   return (
-    <section id="inicio" className="min-h-screen flex items-center justify-center bg-[#301E47] text-white pt-16 relative">
+    <section id="inicio" className="min-h-screen flex items-center justify-center bg-[#301E47] text-white pt-16 relative overflow-hidden">
+      {/* Decorative circles */}
+      <div className="absolute top-20 -left-24 w-96 h-96 bg-[#FAC657]/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 -right-24 w-96 h-96 bg-[#FAC657]/10 rounded-full blur-3xl"></div>
+
       <div className={`container mx-auto px-4 py-16 transition-all duration-1000 transform ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
       }`}>
@@ -63,22 +50,42 @@ const Hero = () => {
             Transformando ideas en soluciones tecnológicas innovadoras
           </p>
 
-          {/* Aura Section */}
-          <div className="mb-16 border-t border-b border-[#FAC657]/20 py-16">
-            <a href="/aura" className="inline-block group">
-              <div className="relative flex flex-col items-center">
-                <div className="absolute inset-0 blur-2xl bg-[#FAC657]/20 scale-150 group-hover:bg-[#FAC657]/30 transition-colors duration-500"></div>
-                <img 
-                  src={auraLogo.src}
-                  alt="AURA"
-                  className="relative w-24 h-24 object-contain transform group-hover:scale-110 transition-transform duration-300"
-                  loading="lazy"
-                />
-                <div className="mt-4 flex items-center justify-center gap-2 text-[#FAC657] font-semibold">
-                  <span className="text-lg">AURA</span>
-                </div>
+          {/* Featured Product Section */}
+          <div className="relative mb-16">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#AA49CC]/20 via-[#FAC657]/20 to-[#7CE0C8]/20 rounded-3xl blur-xl transform scale-105"></div>
+            <div className="relative border border-[#FAC657]/20 rounded-2xl backdrop-blur-sm p-8 bg-[#301E47]/50">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-[#FAC657] text-[#301E47] px-4 py-1 rounded-full text-sm font-semibold">
+                  Nuevo Lanzamiento
+                </span>
               </div>
-            </a>
+
+              <a href="/aura" className="block group">
+                <div className="flex flex-col items-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#AA49CC] via-[#FAC657] to-[#7CE0C8] rounded-full opacity-25 blur-xl group-hover:opacity-50 transition-opacity duration-500"></div>
+                    <img 
+                      src={auraLogo.src}
+                      alt="AURA"
+                      className="relative w-32 h-32 object-contain transform group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </div>
+                  
+                  <h2 className="mt-6 text-3xl font-bold text-[#FAC657] mb-4">AURA</h2>
+                  <p className="text-lg text-gray-300 max-w-2xl mb-6">
+                    Descubre nuestra plataforma de bienestar integral que revoluciona 
+                    la forma en que las personas alcanzan su máximo potencial.
+                  </p>
+                  
+                  <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AA49CC] via-[#FAC657] to-[#7CE0C8] p-[1px] rounded-full group-hover:from-[#7CE0C8] group-hover:via-[#FAC657] group-hover:to-[#AA49CC] transition-all duration-500">
+                    <span className="px-6 py-2 rounded-full bg-[#301E47] text-white group-hover:bg-[#301E47]/90 transition-colors">
+                      Conoce más →
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
 
           {/* Scroll Button */}
@@ -86,7 +93,7 @@ const Hero = () => {
             onClick={scrollToNextSection}
             className="group inline-flex items-center gap-2 text-[#FAC657] hover:text-white transition-colors duration-300"
           >
-            <span className="text-lg">Explorar</span>
+            <span className="text-lg">Explorar más</span>
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               className="h-6 w-6 animate-bounce" 
