@@ -117,6 +117,23 @@ export const surveyData = {
                         }
                     },
                     {
+                        "id": "entornoTrabajoCombinacionDetalle", // Nuevo ID
+                        "questionText": "Por favor, selecciona los entornos que combinas:", // Nuevo texto
+                        "type": "select_multiple", // Tipo Checkbox
+                        "required": true, // Requerido si se seleccionó "combinacion"
+                        "options": [
+                            // Opciones principales (excluyendo "combinacion" y "otro")
+                            { "value": "gimnasio", "label": "Gimnasio / Centro deportivo" },
+                            { "value": "clinica", "label": "Clínica / Consultorio" },
+                            { "value": "online", "label": "Online / Remoto" },
+                            { "value": "domicilio", "label": "A domicilio" }
+                        ],
+                        "dependsOn": { // Dependencia
+                            "fieldId": "entornoTrabajo", // Depende de la pregunta original
+                            "value": "combinacion" // Aparece solo si se selecciona "combinacion"
+                        }
+                    },
+                    {
                         "id": "numClientes", // camelCase
                         "questionText": "¿Aproximadamente cuántos clientes/pacientes gestionas activamente en un mes promedio?", // camelCase
                         "type": "select_one",
@@ -368,16 +385,16 @@ export const surveyData = {
                     },
                     {
                         "id": "aperturaNuevaPlataforma", // camelCase
-                        "questionText": "En una escala de 1 (Nada abierto) a 5 (Muy abierto), ¿qué tan abierto/a estarías a probar una NUEVA plataforma digital que integre gestión de clientes, creación/entrega de planes y seguimiento del progreso en un solo lugar?", // camelCase
+                        "questionText": "En una escala de 1 (Nada dispuesto/a) a 5 (Totalmente dispuesto/a), ¿qué tan dispuesto/a estarías a probar una **nueva solución integral** como AURA para gestionar tu práctica profesional?", 
                         "type": "select_one",
                         "required": true,
                         "displayType": "likert", // camelCase
                         "options": [
-                            { "value": 1, "label": "1 - Nada abierto/a" }, // Numeric value
-                            { "value": 2, "label": "2 - Poco abierto/a" }, // Numeric value
-                            { "value": 3, "label": "3 - Neutral/Depende del costo-beneficio" }, // Numeric value
-                            { "value": 4, "label": "4 - Abierto/a" }, // Numeric value
-                            { "value": 5, "label": "5 - Muy abierto/a, busco activamente mejores soluciones" } // Numeric value
+                            { "value": 1, "label": "1 - Nada dispuesto/a" }, 
+                            { "value": 2, "label": "2 - Poco dispuesto/a" }, 
+                            { "value": 3, "label": "3 - Neutral/Depende" },
+                            { "value": 4, "label": "4 - Dispuesto/a" }, 
+                            { "value": 5, "label": "5 - Totalmente dispuesto/a" } 
                         ]
                     }
                 ]

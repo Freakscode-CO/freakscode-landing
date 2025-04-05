@@ -175,6 +175,8 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => { // Destructure s
                 currentStep={currentStep}
                 totalSteps={totalSteps}
                 blocks={survey.blocks}
+                currentBlockColor={'indigo'}
+                colorMap={{}}
             />
 
             {/* Dynamic Step Content */}
@@ -217,7 +219,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => { // Destructure s
                                     formData={formData}
                                     handleInputChange={handleInputChange}
                                     checkDependency={checkDependency}
-                                />
+                                    validationErrors={[]}                                />
                             ))}
                         </div>
                     </fieldset>
