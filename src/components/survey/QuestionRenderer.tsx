@@ -6,19 +6,25 @@ interface QuestionRendererProps {
     formData: Record<string, any>;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     checkDependency: (dependsOn?: Question['dependsOn']) => boolean;
+    validationErrors: string[];
 }
 
-const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData, handleInputChange, checkDependency }) => {
+const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData, handleInputChange, checkDependency, validationErrors }) => {
     if (!checkDependency(question.dependsOn)) {
         return null; // Don't render if dependency not met
     }
+
+    const hasError = validationErrors.includes(question.id);
+    const errorClasses = hasError ? 'border-red-500 ring-1 ring-red-500' : 'border-gray-300';
 
     const commonProps = {
         id: question.id,
         name: question.id,
         required: question.required,
         onChange: handleInputChange,
-        className: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500",
+        className: `mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errorClasses}`,
+        'aria-invalid': hasError,
+        'aria-describedby': hasError ? `${question.id}-error` : undefined,
     };
 
     const label = (
@@ -26,6 +32,12 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
             {question.questionText} {question.required && <span className="text-red-500">*</span>}
         </label>
     );
+
+    const errorFeedback = hasError ? (
+        <p id={`${question.id}-error`} className="mt-1 text-xs text-red-600">
+            Este campo es obligatorio.
+        </p>
+    ) : null;
 
     switch (question.type) {
         case 'text':
@@ -38,6 +50,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
                         {...commonProps}
                         value={formData[question.id] || ''}
                     />
+                    {errorFeedback}
                 </div>
             );
         case 'text_area':
@@ -49,6 +62,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
                         rows={4}
                         value={formData[question.id] || ''}
                     />
+                    {errorFeedback}
                 </div>
             );
         case 'select_one':
@@ -92,6 +106,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
                                 </label>
                             ))}
                         </div>
+                        {errorFeedback}
                     </div>
                 );
             } else {
@@ -104,6 +119,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
                                 <option key={option.value.toString()} value={option.value}>{option.label}</option>
                             ))}
                         </select>
+                        {errorFeedback}
                     </div>
                 );
             }
@@ -112,7 +128,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
             return (
                 <div key={question.id} className="mb-4">
                     {label}
-                    <div className="mt-2 space-y-2">
+                    <div className={`mt-2 space-y-2 p-2 rounded-md ${hasError ? 'ring-1 ring-red-500 border border-red-500' : ''}`}>
                         {question.options?.map(option => (
                             <label key={option.value.toString()} className="flex items-center p-2 hover:bg-indigo-50 rounded-md transition-colors">
                                 <input
@@ -127,6 +143,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
                             </label>
                         ))}
                     </div>
+                    {errorFeedback}
                 </div>
             );
 

@@ -27,9 +27,9 @@ const ThankYouScreen: React.FC<ThankYouScreenProps> = ({ formData }) => {
         // Intentar obtener el nombre del profesional de los datos del formulario
         let name = '';
         
-        // Intentamos conseguir el nombre de diferentes campos posibles
-        if (formData.nombre) {
-            name = formData.nombre;
+        // Buscar por el ID correcto: "nombreContacto"
+        if (formData.nombreContacto) {
+            name = formData.nombreContacto;
         } else if (formData.rolProfesional) {
             // Si no tenemos nombre, usamos su rol profesional
             const roles: RoleMap = {
@@ -52,7 +52,7 @@ const ThankYouScreen: React.FC<ThankYouScreenProps> = ({ formData }) => {
         selectedMessage = selectedMessage.replace('{name}', name);
         setMessage(selectedMessage);
         
-        console.log("ThankYouScreen montado. Mensaje:", selectedMessage);
+        console.log("ThankYouScreen montado. Nombre usado:", name, "Mensaje:", selectedMessage);
     }, [formData]);
     
     return (
