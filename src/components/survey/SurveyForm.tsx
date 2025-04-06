@@ -11,70 +11,73 @@ import { submitSurvey } from '../../utils/api'; // Adjusted path
 
 // --- Interfaces for Type Safety (Removed) ---
 
-// --- Mapa de Colores por Bloque ---
+// --- Mapa de Colores por Bloque (Actualizado con colores AURA) ---
 const blockColorMap: { [key: string]: string } = {
-  perfilProfesional: 'indigo',
-  gestionClientesDolor: 'purple',
-  creacionEntregaPlanes: 'sky',
-  usoPlataformasDigitales: 'teal',
-  diferenciacionComunicacion: 'rose', 
-  interesAura: 'emerald',
+  perfilProfesional: 'aura-primary',     // Morado
+  gestionClientesDolor: 'aura-rose',      // Rosa/Morado
+  creacionEntregaPlanes: 'aura-secondary', // Turquesa
+  usoPlataformasDigitales: 'aura-green',    // Verde Claro
+  diferenciacionComunicacion: 'aura-orange',   // Naranja
+  interesAura: 'aura-accent',        // Amarillo
 };
 // --- Fin Mapa de Colores ---
 
-// --- Mapas de Clases CSS para Colores Dinámicos ---
+// --- Mapas de Clases CSS para Colores Dinámicos (Actualizados con prefijo aura-) ---
 const borderColorClasses: { [key: string]: string } = {
-  indigo: 'border-t-4 border-indigo-600',
-  purple: 'border-t-4 border-purple-600',
-  sky: 'border-t-4 border-sky-600',
-  teal: 'border-t-4 border-teal-600',
-  rose: 'border-t-4 border-rose-600',
-  emerald: 'border-t-4 border-emerald-600',
+  'aura-primary': 'border-t-4 border-aura-primary',
+  'aura-secondary': 'border-t-4 border-aura-secondary',
+  'aura-accent': 'border-t-4 border-aura-accent',
+  'aura-rose': 'border-t-4 border-aura-rose',
+  'aura-orange': 'border-t-4 border-aura-orange',
+  'aura-green': 'border-t-4 border-aura-green',
 };
 
 const bgColorClasses: { [key: string]: string } = {
-  indigo: 'bg-indigo-100',
-  purple: 'bg-purple-100',
-  sky: 'bg-sky-100',
-  teal: 'bg-teal-100',
-  rose: 'bg-rose-100',
-  emerald: 'bg-emerald-100',
+  'aura-primary': 'bg-aura-primary/10', // Usar opacidad para fondos claros
+  'aura-secondary': 'bg-aura-secondary/10',
+  'aura-accent': 'bg-aura-accent/10',
+  'aura-rose': 'bg-aura-rose/10',
+  'aura-orange': 'bg-aura-orange/10',
+  'aura-green': 'bg-aura-green/10',
 };
 
 const textColorClasses: { [key: string]: string } = {
-  indigo: 'text-indigo-600',
-  purple: 'text-purple-600',
-  sky: 'text-sky-600',
-  teal: 'text-teal-600',
-  rose: 'text-rose-600',
-  emerald: 'text-emerald-600',
+  'aura-primary': 'text-aura-primary',
+  'aura-secondary': 'text-aura-secondary',
+  'aura-accent': 'text-aura-accent',
+  'aura-rose': 'text-aura-rose',
+  'aura-orange': 'text-aura-orange',
+  'aura-green': 'text-aura-green',
 };
 
-const bgButtonClasses: { [key: string]: string } = {
-  indigo: 'bg-indigo-600',
-  purple: 'bg-purple-600',
-  sky: 'bg-sky-600',
-  teal: 'bg-teal-600',
-  rose: 'bg-rose-600',
-  emerald: 'bg-emerald-600',
+// Clases para fondos oscuros (botones, barra de progreso)
+const bgDarkColorClasses: { [key: string]: string } = {
+  'aura-primary': 'bg-aura-primary',
+  'aura-secondary': 'bg-aura-secondary',
+  'aura-accent': 'bg-aura-accent',
+  'aura-rose': 'bg-aura-rose',
+  'aura-orange': 'bg-aura-orange',
+  'aura-green': 'bg-aura-green',
 };
 
-const hoverBgClasses: { [key: string]: string } = {
-  indigo: 'hover:bg-indigo-700',
-  purple: 'hover:bg-purple-700',
-  sky: 'hover:bg-sky-700',
-  teal: 'hover:bg-teal-700',
-  rose: 'hover:bg-rose-700',
-  emerald: 'hover:bg-emerald-700',
+// Clases para hover de fondos oscuros
+const hoverBgDarkColorClasses: { [key: string]: string } = {
+  'aura-primary': 'hover:bg-aura-primary/90',
+  'aura-secondary': 'hover:bg-aura-secondary/90',
+  'aura-accent': 'hover:bg-aura-accent/90',
+  'aura-rose': 'hover:bg-aura-rose/90',
+  'aura-orange': 'hover:bg-aura-orange/90',
+  'aura-green': 'hover:bg-aura-green/90',
 };
 
+// Clases para texto oscuro (títulos, etc.)
 const textDarkClasses: { [key: string]: string } = {
-  indigo: 'text-indigo-900',
-  purple: 'text-purple-900',
-  sky: 'text-sky-900',
-  teal: 'text-teal-900',
-  rose: 'text-rose-900',
-  emerald: 'text-emerald-900',
+  'aura-primary': 'text-aura-primary', // Usar el color principal para títulos oscuros
+  'aura-secondary': 'text-aura-secondary',
+  'aura-accent': 'text-aura-text-dark', // Texto oscuro normal para acento amarillo
+  'aura-rose': 'text-aura-rose',
+  'aura-orange': 'text-aura-orange',
+  'aura-green': 'text-aura-green',
 };
 // --- Fin Mapas de Clases ---
 
@@ -284,7 +287,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
     ];
 
     // Determinar color del bloque actual para ProgressBar
-    const currentBlockColorName = blockColorMap[survey.blocks[currentStep - 1]?.blockId] || 'indigo';
+    const currentBlockColorName = blockColorMap[survey.blocks[currentStep - 1]?.blockId] || 'aura-primary';
 
     // Orden de prioridad: Enviado > Enviando > Contexto > Intermedio Inicial > Formulario
     if (isSubmitted) {
@@ -296,7 +299,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
         console.log("Render: Enviando encuesta...");
         return (
             <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg text-center transform transition-all duration-500 animate-pulse">
-                <svg className="w-16 h-16 mx-auto text-indigo-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-16 h-16 mx-auto text-aura-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-gray-700 text-xl">Enviando tu encuesta...</p>
@@ -305,7 +308,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
     }
 
     // Usar color índigo por defecto para la pantalla de contexto
-    const contextColor = 'indigo'; 
+    const contextColor = 'aura-primary'; 
     if (showContext) {
         console.log("Render: Pantalla de contexto");
         return (
@@ -326,7 +329,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
                 </p>
                 <button
                     onClick={handleContextClick}
-                    className={`w-full ${bgButtonClasses[contextColor]} text-white py-3 px-6 rounded-lg ${hoverBgClasses[contextColor]} transition-colors transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-medium text-lg`}
+                    className={`w-full ${bgDarkColorClasses[contextColor]} text-aura-text-light py-3 px-6 rounded-lg ${hoverBgDarkColorClasses[contextColor]} transition-colors transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-aura-primary/50 focus:ring-offset-2 font-medium text-lg`}
                 >
                     Comenzar Encuesta
                 </button>
@@ -338,7 +341,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
         console.log("Render: Cargando primera sección...");
         return (
             <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg text-center transform transition-all duration-500 animate-pulse">
-                 <svg className="w-16 h-16 mx-auto text-indigo-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                 <svg className="w-16 h-16 mx-auto text-aura-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-gray-700 text-xl">¡Genial! Cargando la primera sección...</p>
@@ -360,7 +363,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
 
             <div className={`space-y-6 ${animation}`}>
                 {survey.blocks.map((block, index) => {
-                    const blockColorName = blockColorMap[block.blockId] || 'indigo';
+                    const blockColorName = blockColorMap[block.blockId] || 'aura-primary';
                     const isCurrent = currentStep === index + 1;
 
                     return (
@@ -369,10 +372,10 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
                             className={`step ${isCurrent ? 'block' : 'hidden'} ${borderColorClasses[blockColorName]} bg-white p-4 md:p-6 rounded-lg shadow-md transform transition-all duration-300`}
                         >
                             <div className="md:hidden text-center mb-4 pb-3 border-b border-gray-100">
-                                <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${bgColorClasses[blockColorName]} ${textColorClasses[blockColorName]} border-2 ${borderColorClasses[blockColorName]} mb-2`}>
+                                <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${bgColorClasses[blockColorName]} ${textColorClasses[blockColorName]} border-2 ${borderColorClasses[blockColorName].replace('border-t-4 ','')} mb-2`}>
                                     <span>{index + 1}</span>
                                 </span>
-                                <h3 className="text-lg font-semibold text-gray-900">{block.title}</h3>
+                                <h3 className="text-lg font-semibold text-aura-text-dark">{block.title}</h3>
                             </div>
                             
                             <div className="hidden md:flex items-start mb-6">
@@ -382,7 +385,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
                                     })}
                                 </div>
                                 <div>
-                                    <legend className="text-xl font-semibold text-gray-900">{block.title}</legend>
+                                    <legend className="text-xl font-semibold text-aura-text-dark">{block.title}</legend>
                                     <p className="text-sm text-gray-500 mt-1">{block.description}</p>
                                 </div>
                             </div>

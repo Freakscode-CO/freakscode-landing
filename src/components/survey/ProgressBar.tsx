@@ -1,41 +1,41 @@
 import React from 'react';
 import type { Block } from '../../data/surveyDefinition';
 
-// --- Mapas de Clases CSS para Colores Dinámicos ---
+// --- Mapas de Clases CSS para Colores Dinámicos (Actualizados con prefijo aura-) ---
 const bgColorClasses: { [key: string]: string } = {
-    indigo: 'bg-indigo-100',
-    purple: 'bg-purple-100',
-    sky: 'bg-sky-100',
-    teal: 'bg-teal-100',
-    rose: 'bg-rose-100',
-    emerald: 'bg-emerald-100',
+    'aura-primary': 'bg-aura-primary/10',
+    'aura-secondary': 'bg-aura-secondary/10',
+    'aura-accent': 'bg-aura-accent/10',
+    'aura-rose': 'bg-aura-rose/10',
+    'aura-orange': 'bg-aura-orange/10',
+    'aura-green': 'bg-aura-green/10',
 };
 
-const bgDarkClasses: { [key: string]: string } = {
-    indigo: 'bg-indigo-600',
-    purple: 'bg-purple-600',
-    sky: 'bg-sky-600',
-    teal: 'bg-teal-600',
-    rose: 'bg-rose-600',
-    emerald: 'bg-emerald-600',
+const bgDarkColorClasses: { [key: string]: string } = {
+    'aura-primary': 'bg-aura-primary',
+    'aura-secondary': 'bg-aura-secondary',
+    'aura-accent': 'bg-aura-accent',
+    'aura-rose': 'bg-aura-rose',
+    'aura-orange': 'bg-aura-orange',
+    'aura-green': 'bg-aura-green',
 };
 
 const textColorClasses: { [key: string]: string } = {
-    indigo: 'text-indigo-600',
-    purple: 'text-purple-600',
-    sky: 'text-sky-600',
-    teal: 'text-teal-600',
-    rose: 'text-rose-600',
-    emerald: 'text-emerald-600',
+    'aura-primary': 'text-aura-primary',
+    'aura-secondary': 'text-aura-secondary',
+    'aura-accent': 'text-aura-accent',
+    'aura-rose': 'text-aura-rose',
+    'aura-orange': 'text-aura-orange',
+    'aura-green': 'text-aura-green',
 };
 
 const borderColorClasses: { [key: string]: string } = {
-    indigo: 'border-indigo-600',
-    purple: 'border-purple-600',
-    sky: 'border-sky-600',
-    teal: 'border-teal-600',
-    rose: 'border-rose-600',
-    emerald: 'border-emerald-600',
+    'aura-primary': 'border-aura-primary',
+    'aura-secondary': 'border-aura-secondary',
+    'aura-accent': 'border-aura-accent',
+    'aura-rose': 'border-aura-rose',
+    'aura-orange': 'border-aura-orange',
+    'aura-green': 'border-aura-green',
 };
 // --- Fin Mapas de Clases ---
 
@@ -43,15 +43,15 @@ interface ProgressBarProps {
     currentStep: number;
     totalSteps: number;
     blocks: readonly Block[];
-    currentBlockColor: string; // Color del bloque actual
-    colorMap: { [key: string]: string }; // Mapa de colores
+    currentBlockColor: string; // Color del bloque actual (nombre, ej: 'aura-primary')
+    colorMap: { [key: string]: string }; // Mapa de colores por blockId
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ 
     currentStep, 
     totalSteps, 
     blocks, 
-    currentBlockColor, 
+    currentBlockColor, // Recibe el nombre del color, ej: 'aura-primary'
     colorMap 
 }) => {
     return (
@@ -59,7 +59,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             <div className="flex justify-between mb-2 px-1">
                 {blocks.map((block, index) => {
                     const stepNumber = index + 1;
-                    const blockColor = colorMap[block.blockId] || 'indigo';
+                    const blockColorName = colorMap[block.blockId] || 'aura-primary';
                     const isCompleted = stepNumber < currentStep;
                     const isCurrent = stepNumber === currentStep;
                     const isFuture = stepNumber > currentStep;
@@ -69,12 +69,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                     let titleOpacity = 'opacity-50';
 
                     if (isCompleted) {
-                        circleClasses = `${bgDarkClasses[blockColor]} text-white ${borderColorClasses[blockColor]}`;
-                        textClasses = textColorClasses[blockColor];
+                        circleClasses = `${bgDarkColorClasses[blockColorName]} text-aura-text-light ${borderColorClasses[blockColorName]}`;
+                        textClasses = textColorClasses[blockColorName];
                         titleOpacity = '';
                     } else if (isCurrent) {
-                        circleClasses = `${bgColorClasses[blockColor]} ${textColorClasses[blockColor]} ${borderColorClasses[blockColor]}`;
-                        textClasses = textColorClasses[blockColor];
+                        circleClasses = `${bgColorClasses[blockColorName]} ${textColorClasses[blockColorName]} ${borderColorClasses[blockColorName]}`;
+                        textClasses = textColorClasses[blockColorName];
                         titleOpacity = '';
                     }
                     
@@ -85,7 +85,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                             style={{ flexBasis: `${100 / totalSteps}%` }}
                         >
                             <div
-                                // Aplicar clases de círculo dinámicas
                                 className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center mb-1 border-2 ${circleClasses}`}
                             >
                                 {isCompleted ? (
@@ -101,8 +100,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             </div>
             <div className="h-2 bg-gray-200 rounded-full">
                 <div
-                    // Usar el color del bloque actual para la barra de progreso
-                    className={`h-2 ${bgDarkClasses[currentBlockColor]} rounded-full transition-all duration-500 ease-out`}
+                    className={`h-2 ${bgDarkColorClasses[currentBlockColor]} rounded-full transition-all duration-500 ease-out`}
                     style={{ width: `${totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0}%` }} 
                 />
             </div>
