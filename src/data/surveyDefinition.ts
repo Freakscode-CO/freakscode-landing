@@ -50,6 +50,25 @@ export const surveyData = {
         "version": "1.0.0",
         "blocks": [
             {
+                "blockId": "informacionContacto",
+                "title": "Información de Contacto",
+                "description": "Para poder contactarte sobre los resultados de la encuesta y mantenerte informado sobre AURA.",
+                "questions": [
+                    {
+                        "id": "nombreContacto",
+                        "questionText": "¿Cuál es tu nombre completo?",
+                        "type": "text",
+                        "required": true
+                    },
+                    {
+                        "id": "emailContacto",
+                        "questionText": "¿Cuál es tu correo electrónico?",
+                        "type": "email",
+                        "required": true
+                    }
+                ]
+            },
+            {
                 "blockId": "perfilProfesional", // camelCase
                 "title": "Perfil Profesional",
                 "description": "Información para segmentación.",
@@ -60,7 +79,7 @@ export const surveyData = {
                         "type": "select_one",
                         "required": true,
                         "options": [
-                            { "value": "entrenador_personal", "label": "Entrenador Personal / Preparador Físico" },
+                            { "value": "entrenador_personal", "label": "Entrenador Personal / Preparador Físico / Entrenador Deportivo" },
                             { "value": "fisioterapeuta", "label": "Fisioterapeuta / Kinesiólogo" },
                             { "value": "nutricionista", "label": "Nutricionista / Dietista" },
                             { "value": "coach_salud", "label": "Coach de Salud / Bienestar" },
