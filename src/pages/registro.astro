@@ -155,11 +155,35 @@ const emailFromURL = Astro.url.searchParams.get('email') || '';
 </Layout>
 
 <script>
+  // Función para validar el formato del email
+  function validarEmail(email: string): boolean {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+  }
+
   document.getElementById('registroForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const form = e.target as HTMLFormElement;
     const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const emailInput = form.querySelector('#email') as HTMLInputElement;
+    
+    // Validar el email antes de proceder
+    if (!validarEmail(emailInput.value)) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-[#FDFDF7] text-center mt-4';
+      errorDiv.innerHTML = 'Por favor, ingresa un correo electrónico válido.';
+      
+      // Remover mensajes de error anteriores
+      const existingError = form.querySelector('.bg-red-500\\/20');
+      if (existingError) {
+        existingError.remove();
+      }
+      
+      form.appendChild(errorDiv);
+      emailInput.focus();
+      return;
+    }
     
     try {
       // Deshabilitamos el botón y cambiamos el texto

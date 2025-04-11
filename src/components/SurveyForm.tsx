@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/survey.css';
-import type { Survey } from '../data/surveyDefinition'; // Use 'import type'
-import ProgressBar from './survey/ProgressBar'; // Import subcomponents
+import type { Survey } from '../data/surveyDefinition';
+import ProgressBar from './survey/ProgressBar';
 import QuestionRenderer from './survey/QuestionRenderer';
 import NavigationButtons from './survey/NavigationButtons';
-import ThankYouScreen from './survey/ThankYouScreen'; // Importar el componente de agradecimiento
-import { submitSurvey } from '../utils/api'; // Import submission function
+import ThankYouScreen from './survey/ThankYouScreen';
+import { submitSurvey } from '../utils/api';
 
 interface SurveyFormProps {
-    survey: Survey; // Receive survey definition as a prop
+    survey: Survey;
 }
 
-const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => { // Destructure survey from props
-    const [currentStep, setCurrentStep] = useState(1); // Step index (1-based)
+const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
+    const [currentStep, setCurrentStep] = useState(1);
     const [showContext, setShowContext] = useState(true);
     const [showIntermediate, setShowIntermediate] = useState(false);
-    const [formData, setFormData] = useState<Record<string, any>>({}); // Use 'any' for simplicity, could be more specific (string | string[])
+    const [formData, setFormData] = useState<Record<string, any>>({});
     const [animation, setAnimation] = useState('fade-in');
-    const [isSubmitted, setIsSubmitted] = useState(false); // Nueva variable para controlar si se ha enviado
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const totalSteps = survey.blocks.length; // Total steps based on JSON blocks
+    const totalSteps = survey.blocks.length;
 
     const handleContextClick = () => {
         setShowContext(false);
