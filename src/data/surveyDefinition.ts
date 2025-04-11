@@ -83,6 +83,8 @@ export const surveyData = {
                             { "value": "fisioterapeuta", "label": "Fisioterapeuta / Kinesiólogo" },
                             { "value": "nutricionista", "label": "Nutricionista / Dietista" },
                             { "value": "coach_salud", "label": "Coach de Salud / Bienestar" },
+                            { "value": "psicologo", "label": "Psicólogo / Psicólogo Clínico" },
+                            { "value": "nutrilogo/a", "label": "Nutrilogo/a" },
                             { "value": "otro", "label": "Otro (Especificar)" }
                         ],
                         "hasOtherOption": true // camelCase
