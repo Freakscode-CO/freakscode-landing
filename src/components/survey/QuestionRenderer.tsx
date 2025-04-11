@@ -11,7 +11,7 @@ interface QuestionRendererProps {
 
 const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData, handleInputChange, checkDependency, validationErrors }) => {
     if (!checkDependency(question.dependsOn)) {
-        return null; // Don't render if dependency not met
+        return null; 
     }
 
     const hasError = validationErrors.includes(question.id);
@@ -33,9 +33,20 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
         </label>
     );
 
+    // Mensaje de error específico según el tipo de campo
+    const getErrorMessage = () => {
+        if (!hasError) return null;
+        
+        if (question.type === 'email') {
+            return 'Por favor, ingresa un correo electrónico válido.';
+        }
+        
+        return 'Este campo es obligatorio.';
+    };
+
     const errorFeedback = hasError ? (
         <p id={`${question.id}-error`} className="mt-1 text-xs text-red-600">
-            Este campo es obligatorio.
+            {getErrorMessage()}
         </p>
     ) : null;
 

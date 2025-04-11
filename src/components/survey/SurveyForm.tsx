@@ -97,6 +97,12 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
 
     const totalSteps = survey.blocks.length;
 
+    // Función para validar el formato del email
+    const validarEmail = (email: string): boolean => {
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return regex.test(email);
+    };
+
     const handleContextClick = () => {
         setShowContext(false);
         setShowIntermediate(true);
@@ -156,6 +162,14 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
                         console.warn(`Validación fallida: Pregunta requerida '${question.id}' (${question.questionText}) está vacía.`);
                         errors.push(question.id);
                     }
+                    
+                    // Validación específica para campos de tipo email
+                    if (question.type === 'email' && value && !isEmpty) {
+                        if (!validarEmail(value)) {
+                            console.warn(`Validación fallida: El email '${value}' no es válido.`);
+                            errors.push(question.id);
+                        }
+                    }
                 }
             }
         }
@@ -178,6 +192,14 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
                     console.warn(`Validación Paso ${stepIndex}: Pregunta requerida '${question.id}' está vacía.`);
                     errors.push(question.id);
                 }
+                
+                // Validación específica para campos de tipo email
+                if (question.type === 'email' && value && !isEmpty) {
+                    if (!validarEmail(value)) {
+                        console.warn(`Validación Paso ${stepIndex}: El email '${value}' no es válido.`);
+                        errors.push(question.id);
+                    }
+                }
             }
         }
         return errors; // Devuelve array de IDs con error PARA ESTE PASO
@@ -192,7 +214,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
         const currentErrors = validateAllRequiredFields();
         if (currentErrors.length > 0) {
             setValidationErrors(currentErrors);
-            alert('Por favor, revisa los campos marcados en rojo. Son obligatorios.');
+            alert('Por favor, revisa los campos marcados en rojo. Son obligatorios o contienen datos inválidos.');
             // Opcional: Scroll al primer campo con error
             const firstErrorElement = document.getElementById(currentErrors[0]);
             if (firstErrorElement) {
