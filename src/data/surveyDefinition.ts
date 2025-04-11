@@ -84,7 +84,7 @@ export const surveyData = {
                             { "value": "nutricionista", "label": "Nutricionista / Dietista" },
                             { "value": "coach_salud", "label": "Coach de Salud / Bienestar" },
                             { "value": "psicologo", "label": "Psicólogo / Psicólogo Clínico" },
-                            { "value": "nutrilogo", "label": "Nutrilogo/a" },
+                            { "value": "nutrilogo", "label": "Nutriologo/a" },
                             { "value": "otro", "label": "Otro (Especificar)" }
                         ],
                         "hasOtherOption": true // camelCase
