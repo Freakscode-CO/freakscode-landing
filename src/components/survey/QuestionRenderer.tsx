@@ -25,6 +25,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
         className: `mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errorClasses}`,
         'aria-invalid': hasError,
         'aria-describedby': hasError ? `${question.id}-error` : undefined,
+        placeholder: question.placeholder || undefined,
     };
 
     const label = (
@@ -39,6 +40,10 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
         
         if (question.type === 'email') {
             return 'Por favor, ingresa un correo electrónico válido.';
+        }
+        
+        if (question.type === 'number') {
+            return 'Por favor, ingresa un número válido.';
         }
         
         return 'Este campo es obligatorio.';
@@ -64,6 +69,22 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, formData,
                     {errorFeedback}
                 </div>
             );
+        
+        case 'number':
+            return (
+                <div key={question.id} className="mb-4">
+                    {label}
+                    <input
+                        type="number"
+                        {...commonProps}
+                        value={formData[question.id] || ''}
+                        min={question.min}
+                        max={question.max}
+                    />
+                    {errorFeedback}
+                </div>
+            );
+        
         case 'text_area':
             return (
                 <div key={question.id} className="mb-4">

@@ -15,12 +15,15 @@ export interface DependsOn {
 export interface Question {
     readonly id: string;
     readonly questionText: string; // camelCase
-    readonly type: 'select_one' | 'select_multiple' | 'text' | 'text_area' | 'email';
+    readonly type: 'select_one' | 'select_multiple' | 'text' | 'text_area' | 'email' | 'number';
     readonly required: boolean;
     readonly options?: readonly Option[];
     readonly hasOtherOption?: boolean; // camelCase
     readonly dependsOn?: DependsOn; // camelCase
     readonly displayType?: 'likert'; // camelCase
+    readonly min?: number;
+    readonly max?: number;
+    readonly placeholder?: string;
 }
 
 export interface Block {

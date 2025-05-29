@@ -12,13 +12,26 @@ import { submitSurvey } from '../../utils/api'; // Adjusted path
 // --- Interfaces for Type Safety (Removed) ---
 
 // --- Mapa de Colores por Bloque (Actualizado con colores AURA) ---
-const blockColorMap: { [key: string]: string } = {
+const professionalBlockColorMap: { [key: string]: string } = {
   perfilProfesional: 'aura-primary',     // Morado
   gestionClientesDolor: 'aura-rose',      // Rosa/Morado
   creacionEntregaPlanes: 'aura-secondary', // Turquesa
   usoPlataformasDigitales: 'aura-green',    // Verde Claro
   diferenciacionComunicacion: 'aura-orange',   // Naranja
   interesAura: 'aura-accent',        // Amarillo
+};
+
+// --- Mapa de Colores por Bloque (Survey Bienestar) ---
+const wellnessBlockColorMap: { [key: string]: string } = {
+  informacionPersonal: 'aura-primary',       // Morado - información personal
+  necesidadesObjetivos: 'aura-secondary',    // Turquesa - objetivos
+  actividadFisica: 'aura-green',             // Verde - actividad física
+  estadoEmocional: 'aura-rose',              // Rosa - emociones
+  suenioDescanso: 'aura-accent',             // Amarillo - sueño
+  espiritualidadMindfulness: 'aura-primary', // Morado - espiritualidad
+  preferenciasContenido: 'aura-secondary',   // Turquesa - contenido
+  rutinaPersonalizacion: 'aura-green',       // Verde - rutina
+  feedbackComentarios: 'aura-orange',        // Naranja - feedback
 };
 // --- Fin Mapa de Colores ---
 
@@ -96,6 +109,10 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ survey }) => {
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
     const totalSteps = survey.blocks.length;
+
+    // Determinar qué mapa de colores usar según el tipo de survey
+    const isWellnessSurvey = survey.id === "encuesta_bienestar_aura_v1";
+    const blockColorMap = isWellnessSurvey ? wellnessBlockColorMap : professionalBlockColorMap;
 
     // Función para validar el formato del email
     const validarEmail = (email: string): boolean => {
