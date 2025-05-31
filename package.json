@@ -20,6 +20,7 @@
         "react-dom": "^19.0.0"
     },
     "devDependencies": {
+        "@astrojs/cloudflare": "^12.5.3",
         "@astrojs/tailwind": "^6.0.2",
         "@rollup/rollup-linux-x64-gnu": "4.6.1",
         "@tailwindcss/forms": "^0.5.10",

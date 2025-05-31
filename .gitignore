@@ -1,6 +1,9 @@
 # build output
 dist/
 
+# bun
+bun.lock
+
 # generated types
 .astro/
 
@@ -22,3 +25,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# azure functions
+azure-functions/
+local.settings.json
+host.json
+
+# gitignore for azure functions
+.gitignore
+.funcignore

@@ -1,5 +1,5 @@
 /**
- * Envía los datos de la encuesta al backend en AWS o Azure.
+ * Envía los datos de la encuesta al backend.
  * @param surveyId El ID de la encuesta que se está enviando.
  * @param formData Los datos recopilados de la encuesta.
  */
@@ -10,11 +10,21 @@ export const submitSurvey = async (surveyId: string, formData: Record<string, an
     const AWS_SURVEY_ENDPOINT = import.meta.env.PUBLIC_SURVEY_ENDPOINT || 
                                "https://oyvtmor2xd.execute-api.us-east-1.amazonaws.com/survey";
     
-    const AZURE_SURVEY_ENDPOINT = import.meta.env.PUBLIC_AZURE_SURVEY_ENDPOINT || null;
-    
+    const CLOUDFLARE_WORKER_ENDPOINT = 'https://freakscode-survey-api.gabcardona.workers.dev/';
+
     // Decidir qué endpoint usar basado en el tipo de survey
     const isWellnessSurvey = surveyId === "encuesta_bienestar_aura_v1";
-    const endpoint = isWellnessSurvey && AZURE_SURVEY_ENDPOINT ? AZURE_SURVEY_ENDPOINT : AWS_SURVEY_ENDPOINT;
+    let endpoint: string;
+    let targetPlatform: string;
+
+    if (isWellnessSurvey) {
+        endpoint = CLOUDFLARE_WORKER_ENDPOINT;
+        targetPlatform = 'Cloudflare Worker';
+    } else {
+        // Para otras encuestas, usa AWS (o la lógica que prefieras)
+        endpoint = AWS_SURVEY_ENDPOINT;
+        targetPlatform = 'AWS';
+    }
     
     try {
         // Preparar los datos para enviar
@@ -25,11 +35,11 @@ export const submitSurvey = async (surveyId: string, formData: Record<string, an
             metadata: {
                 userAgent: navigator.userAgent,
                 language: navigator.language,
-                surveyType: isWellnessSurvey ? 'wellness' : 'professional'
+                surveyType: isWellnessSurvey ? 'wellness' : 'professional' // Ajustado para reflejar el tipo correcto
             }
         };
         
-        console.log(`Enviando a: ${isWellnessSurvey && AZURE_SURVEY_ENDPOINT ? 'Azure' : 'AWS'}`);
+        console.log(`Enviando a: ${targetPlatform} (${endpoint})`);
         
         // Realizar la petición al endpoint
         const response = await fetch(endpoint, {
@@ -43,52 +53,25 @@ export const submitSurvey = async (surveyId: string, formData: Record<string, an
         
         // Validar la respuesta
         if (!response.ok) {
-            // Si el servidor respondió con un error, intentamos obtener el mensaje
             const errorData = await response.json().catch(() => ({ message: 'Error desconocido del servidor' }));
-            throw new Error(errorData.message || `Error del servidor: ${response.status}`);
+            throw new Error(errorData.message || `Error del servidor: ${response.status} en ${targetPlatform}`);
         }
         
-        // Respuesta exitosa
-        const data = await response.json().catch(() => ({}));
-        console.log("Encuesta enviada con éxito:", data);
+        const data = await response.json().catch(() => ({})); // El Worker devuelve un JSON, así que esto está bien
+        console.log("Encuesta enviada con éxito a", targetPlatform, ":", data);
         
     } catch (error) {
-        console.error("Error al enviar la encuesta:", error);
+        console.error(`Error al enviar la encuesta a ${targetPlatform}:`, error);
         
-        // Si es una encuesta de bienestar y falla Azure, intentar con AWS como fallback
-        if (isWellnessSurvey && AZURE_SURVEY_ENDPOINT && endpoint === AZURE_SURVEY_ENDPOINT) {
-            console.log("Intentando envío de fallback a AWS...");
-            try {
-                const fallbackPayload = {
-                    surveyId,
-                    responses: formData,
-                    timestamp: new Date().toISOString(),
-                    metadata: {
-                        userAgent: navigator.userAgent,
-                        language: navigator.language,
-                        surveyType: 'wellness',
-                        fallbackReason: 'Azure endpoint failed'
-                    }
-                };
-                
-                const fallbackResponse = await fetch(AWS_SURVEY_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(fallbackPayload)
-                });
-                
-                if (fallbackResponse.ok) {
-                    console.log("Encuesta enviada con éxito usando fallback a AWS");
-                    return;
-                }
-            } catch (fallbackError) {
-                console.error("Error en fallback a AWS:", fallbackError);
-            }
-        }
-        
+        // Aquí podrías implementar un fallback si lo deseas, por ejemplo, a AWS si el Worker falla.
+        // Por ahora, solo re-lanzamos el error.
+        // Ejemplo de fallback a AWS si el Worker falla:
+        // if (targetPlatform === 'Cloudflare Worker') {
+        //     console.log("Cloudflare Worker falló. Intentando envío de fallback a AWS...");
+        //     // Aquí iría la lógica para enviar a AWS_SURVEY_ENDPOINT
+        //     // ... (similar a tu código de fallback anterior, pero adaptado)
+        // }
+
         throw error; // Re-lanzamos el error para manejarlo en el componente
     }
 }; 
