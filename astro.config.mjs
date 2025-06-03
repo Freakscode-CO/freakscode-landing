@@ -15,7 +15,7 @@ export default defineConfig({
   ],
   
   site: 'https://freakscode.com', // Your custom domain or GitHub Pages URL
-  base: '/freakscode-landing/',   // Set to your repository name
+  base: '/',   // Set to your repository name
   
   build: {
     assets: 'assets' // Default assets directory
