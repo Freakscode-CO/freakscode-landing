@@ -1,17 +1,17 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:@astrojs/cloudflare@^12.5.3": "12.5.3_astro@5.8.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_@cloudflare+workers-types@4.20250603.0_@azure+storage-blob@12.27.0",
+    "npm:@astrojs/cloudflare@^12.5.3": "12.5.3_astro@5.8.0__@azure+storage-blob@12.27.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_@cloudflare+workers-types@4.20250603.0_@azure+storage-blob@12.27.0",
     "npm:@astrojs/react@4.3.0": "4.3.0_@types+react@19.1.6_@types+react-dom@19.1.5__@types+react@19.1.6_react@19.1.0_react-dom@19.1.0__react@19.1.0_vite@6.3.5__picomatch@4.0.2",
     "npm:@astrojs/sitemap@^3.4.0": "3.4.0",
-    "npm:@astrojs/tailwind@^6.0.2": "6.0.2_astro@5.8.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_tailwindcss@3.4.1__postcss@8.5.4_postcss@8.5.4_@azure+storage-blob@12.27.0",
+    "npm:@astrojs/tailwind@^6.0.2": "6.0.2_astro@5.8.0__@azure+storage-blob@12.27.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_tailwindcss@3.4.1__postcss@8.5.4_postcss@8.5.4_@azure+storage-blob@12.27.0",
     "npm:@azure/storage-blob@^12.27.0": "12.27.0",
     "npm:@rollup/rollup-linux-x64-gnu@4.6.1": "4.6.1",
     "npm:@tailwindcss/forms@~0.5.10": "0.5.10_tailwindcss@3.4.1__postcss@8.5.4",
     "npm:@tailwindcss/vite@^4.0.3": "4.1.8_vite@6.3.5__picomatch@4.0.2",
     "npm:@types/react-dom@^19.0.3": "19.1.5_@types+react@19.1.6",
     "npm:@types/react@^19.0.8": "19.1.6",
-    "npm:astro@5.8.0": "5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49_@azure+storage-blob@12.27.0",
+    "npm:astro@5.8.0": "5.8.0_@azure+storage-blob@12.27.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49",
     "npm:autoprefixer@^10.4.21": "10.4.21_postcss@8.5.4",
     "npm:gh-pages@^6.3.0": "6.3.0",
     "npm:react-dom@19": "19.1.0_react@19.1.0",
@@ -29,25 +29,13 @@
         "@jridgewell/trace-mapping@0.3.25"
       ]
     },
-    "@astrojs/cloudflare@12.5.3_astro@5.8.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_@cloudflare+workers-types@4.20250603.0": {
+    "@astrojs/cloudflare@12.5.3_astro@5.8.0__@azure+storage-blob@12.27.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_@cloudflare+workers-types@4.20250603.0_@azure+storage-blob@12.27.0": {
       "integrity": "sha512-QYA6gkF+s3LpDNT0KoURgJeByjiSvUABK1VXBpi9yzqUQfWm3kSAtn0aBXX8EkRlE5UaJ0CkArizfgfqr9zBhA==",
       "dependencies": [
         "@astrojs/internal-helpers",
         "@astrojs/underscore-redirects",
         "@cloudflare/workers-types",
-        "astro@5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49",
-        "tinyglobby",
-        "vite",
-        "wrangler"
-      ]
-    },
-    "@astrojs/cloudflare@12.5.3_astro@5.8.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_@cloudflare+workers-types@4.20250603.0_@azure+storage-blob@12.27.0": {
-      "integrity": "sha512-QYA6gkF+s3LpDNT0KoURgJeByjiSvUABK1VXBpi9yzqUQfWm3kSAtn0aBXX8EkRlE5UaJ0CkArizfgfqr9zBhA==",
-      "dependencies": [
-        "@astrojs/internal-helpers",
-        "@astrojs/underscore-redirects",
-        "@cloudflare/workers-types",
-        "astro@5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49_@azure+storage-blob@12.27.0",
+        "astro",
         "tinyglobby",
         "vite",
         "wrangler"
@@ -111,20 +99,10 @@
         "zod@3.25.49"
       ]
     },
-    "@astrojs/tailwind@6.0.2_astro@5.8.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_tailwindcss@3.4.1__postcss@8.5.4_postcss@8.5.4": {
+    "@astrojs/tailwind@6.0.2_astro@5.8.0__@azure+storage-blob@12.27.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_tailwindcss@3.4.1__postcss@8.5.4_postcss@8.5.4_@azure+storage-blob@12.27.0": {
       "integrity": "sha512-j3mhLNeugZq6A8dMNXVarUa8K6X9AW+QHU9u3lKNrPLMHhOQ0S7VeWhHwEeJFpEK1BTKEUY1U78VQv2gN6hNGg==",
       "dependencies": [
-        "astro@5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49",
-        "autoprefixer",
-        "postcss",
-        "postcss-load-config",
-        "tailwindcss@3.4.1_postcss@8.5.4"
-      ]
-    },
-    "@astrojs/tailwind@6.0.2_astro@5.8.0__vite@6.3.5___picomatch@4.0.2__zod@3.25.49_tailwindcss@3.4.1__postcss@8.5.4_postcss@8.5.4_@azure+storage-blob@12.27.0": {
-      "integrity": "sha512-j3mhLNeugZq6A8dMNXVarUa8K6X9AW+QHU9u3lKNrPLMHhOQ0S7VeWhHwEeJFpEK1BTKEUY1U78VQv2gN6hNGg==",
-      "dependencies": [
-        "astro@5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49_@azure+storage-blob@12.27.0",
+        "astro",
         "autoprefixer",
         "postcss",
         "postcss-load-config",
@@ -1392,7 +1370,7 @@
         "printable-characters"
       ]
     },
-    "astro@5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49": {
+    "astro@5.8.0_@azure+storage-blob@12.27.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49": {
       "integrity": "sha512-G57ELkdIntDiSrucA5lQaRtBOjquaZ9b9NIwoz2f471ZuuJcynLjWgItgBzlrz5UMY4WqnFbVWUCKlJb7nt9bA==",
       "dependencies": [
         "@astrojs/compiler",
@@ -1446,77 +1424,7 @@
         "ultrahtml",
         "unifont",
         "unist-util-visit",
-        "unstorage@1.16.0",
-        "vfile",
-        "vite",
-        "vitefu",
-        "xxhash-wasm",
-        "yargs-parser",
-        "yocto-spinner",
-        "zod@3.25.49",
-        "zod-to-json-schema",
-        "zod-to-ts"
-      ],
-      "optionalDependencies": [
-        "sharp"
-      ],
-      "bin": true
-    },
-    "astro@5.8.0_vite@6.3.5__picomatch@4.0.2_zod@3.25.49_@azure+storage-blob@12.27.0": {
-      "integrity": "sha512-G57ELkdIntDiSrucA5lQaRtBOjquaZ9b9NIwoz2f471ZuuJcynLjWgItgBzlrz5UMY4WqnFbVWUCKlJb7nt9bA==",
-      "dependencies": [
-        "@astrojs/compiler",
-        "@astrojs/internal-helpers",
-        "@astrojs/markdown-remark",
-        "@astrojs/telemetry",
-        "@capsizecss/unpack",
-        "@oslojs/encoding",
-        "@rollup/pluginutils",
-        "acorn@8.14.1",
-        "aria-query",
-        "axobject-query",
-        "boxen",
-        "ci-info",
-        "clsx",
-        "common-ancestor-path",
-        "cookie@1.0.2",
-        "cssesc",
-        "debug",
-        "deterministic-object-hash",
-        "devalue",
-        "diff",
-        "dlv",
-        "dset",
-        "es-module-lexer",
-        "esbuild@0.25.5",
-        "estree-walker@3.0.3",
-        "flattie",
-        "fontace",
-        "github-slugger",
-        "html-escaper",
-        "http-cache-semantics",
-        "import-meta-resolve",
-        "js-yaml",
-        "kleur@4.1.5",
-        "magic-string",
-        "magicast",
-        "mrmime",
-        "neotraverse",
-        "p-limit@6.2.0",
-        "p-queue",
-        "package-manager-detector",
-        "picomatch@4.0.2",
-        "prompts",
-        "rehype",
-        "semver@7.7.2",
-        "shiki",
-        "tinyexec",
-        "tinyglobby",
-        "tsconfck",
-        "ultrahtml",
-        "unifont",
-        "unist-util-visit",
-        "unstorage@1.16.0_@azure+storage-blob@12.27.0",
+        "unstorage",
         "vfile",
         "vite",
         "vitefu",
@@ -3833,19 +3741,6 @@
     },
     "universalify@2.0.1": {
       "integrity": "sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw=="
-    },
-    "unstorage@1.16.0": {
-      "integrity": "sha512-WQ37/H5A7LcRPWfYOrDa1Ys02xAbpPJq6q5GkO88FBXVSQzHd7+BjEwfRqyaSWCv9MbsJy058GWjjPjcJ16GGA==",
-      "dependencies": [
-        "anymatch",
-        "chokidar@4.0.3",
-        "destr",
-        "h3",
-        "lru-cache@10.4.3",
-        "node-fetch-native",
-        "ofetch",
-        "ufo"
-      ]
     },
     "unstorage@1.16.0_@azure+storage-blob@12.27.0": {
       "integrity": "sha512-WQ37/H5A7LcRPWfYOrDa1Ys02xAbpPJq6q5GkO88FBXVSQzHd7+BjEwfRqyaSWCv9MbsJy058GWjjPjcJ16GGA==",
