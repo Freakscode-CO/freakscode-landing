@@ -70,6 +70,19 @@ const survey: Survey = surveyPascualBravoData.survey;
       </div>
     </section>
   </main>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center px-4" style="display: none; z-index: 50;">
+    <div class="relative p-6 md:p-8 border w-full max-w-md shadow-xl rounded-lg bg-white text-center">
+      <svg class="w-16 h-16 mx-auto mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <h3 class="text-2xl font-bold text-purple-900 mb-3">¡Gracias!</h3>
+      <p class="text-md text-gray-700 mb-2">Hemos recibido tu encuesta.</p>
+      <p class="text-md text-gray-700 mb-6">Por favor, mantente pendiente de tu correo electrónico en las próximas horas para conocer los siguientes pasos.</p>
+      <button id="continueToAuraBtn" class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+        Continuar a AURA
+      </button>
+    </div>
+  </div>
 </Layout>
 
 <script define:vars={{ surveyId: survey.id, totalBlocks: survey.blocks.length }}>
@@ -84,6 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const formNavigation = document.getElementById('formNavigation');
   const formStatusMessage = document.getElementById('formStatusMessage');
   
+  const successModal = document.getElementById('successModal');
+  const continueToAuraBtn = document.getElementById('continueToAuraBtn');
+
   let currentBlockIndex = 0;
 
   function updateButtonVisibility() {
@@ -117,9 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const groupName = input.name;
         if (!form.querySelector(`input[name="${groupName}"]:checked`)) {
           allRequiredFilled = false;
-          input.classList.add('border-red-500');
+          // Add error style to the group or a specific element if desired
+          const groupContainer = input.closest('.question-group-container'); // Assuming you have such a container
+          if (groupContainer) groupContainer.classList.add('border-red-500'); else input.classList.add('border-red-500');
         } else {
-          input.classList.remove('border-red-500');
+          const groupContainer = input.closest('.question-group-container');
+          if (groupContainer) groupContainer.classList.remove('border-red-500'); else input.classList.remove('border-red-500');
         }
       } else if (!input.value.trim()) {
         allRequiredFilled = false;
@@ -133,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   nextBtn?.addEventListener('click', () => {
     if (!validateCurrentBlock()) {
-      formStatusMessage.textContent = 'Por favor, completa todos los campos obligatorios marcados en rojo.';
-      formStatusMessage.className = 'text-red-600 font-medium';
+      formStatusMessage.textContent = 'Por favor, completa todos los campos obligatorios.';
+      formStatusMessage.className = 'text-red-600 font-medium mb-2';
       return;
     }
     formStatusMessage.textContent = '';
@@ -146,8 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!validateCurrentBlock()) {
-      formStatusMessage.textContent = 'Por favor, completa todos los campos obligatorios marcados en rojo.';
-      formStatusMessage.className = 'text-red-600 font-medium';
+      formStatusMessage.textContent = 'Por favor, completa todos los campos obligatorios.';
+      formStatusMessage.className = 'text-red-600 font-medium mb-2';
       return;
     }
 
@@ -170,43 +189,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Log para depurar el JSON que se va a enviar
     console.log('Datos a enviar (antes de stringify):', dataToSubmit);
     const jsonBody = JSON.stringify(dataToSubmit);
     console.log('JSON Body a enviar:', jsonBody);
 
     try {
-      const response = await fetch('/api/submit-pascual-survey-azure', { 
+      const response = await fetch('/api/submit-pascual-survey', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonBody, // Usar la variable que contiene el JSON stringified
+        body: jsonBody, 
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({})); // Gracefully handle non-JSON responses
 
       if (response.ok) {
-        formStatusMessage.textContent = result.message || '¡Encuesta enviada con éxito a Azure!';
-        formStatusMessage.className = 'text-green-600 font-medium';
-        form.reset();
-        showBlock(0);
+        form.style.display = 'none'; // Hide the form itself
         formNavigation.style.display = 'none';
+        formStatusMessage.textContent = ''; // Clear status message
+        if(successModal) successModal.style.display = 'flex'; // Show success modal
+        // Form reset and showBlock(0) might be redundant if we are showing a modal that leads to navigation
+        // form.reset(); 
+        // showBlock(0); 
       } else {
-        formStatusMessage.textContent = result.message || 'Error al enviar la encuesta a Azure. Inténtalo de nuevo.';
+        formStatusMessage.textContent = result.message || 'Error al enviar la encuesta. Inténtalo de nuevo.';
         formStatusMessage.className = 'text-red-600 font-medium';
+        submitBtn.removeAttribute('disabled');
+        submitBtn.textContent = 'Enviar Encuesta';
       }
     } catch (error) {
-      console.error('Error en el envío del formulario a Azure:', error);
-      formStatusMessage.textContent = 'Error de conexión con Azure. Por favor, verifica tu conexión e inténtalo de nuevo.';
+      console.error('Error en el envío del formulario:', error);
+      formStatusMessage.textContent = 'Error de conexión. Por favor, verifica tu conexión e inténtalo de nuevo.';
       formStatusMessage.className = 'text-red-600 font-medium';
-    } finally {
       submitBtn.removeAttribute('disabled');
       submitBtn.textContent = 'Enviar Encuesta';
-    }
+    } 
+    // Removed finally block that re-enabled button, as success path hides form
   });
 
-  // Initialize
+  continueToAuraBtn?.addEventListener('click', () => {
+    window.location.href = '/aura/'; // Redirect to AURA homepage
+  });
+
+  // Initialize first block and button visibility
   showBlock(0);
 });
 </script>
@@ -222,4 +248,4 @@ document.addEventListener('DOMContentLoaded', () => {
   input.border-red-500, textarea.border-red-500, select.border-red-500 {
     border-color: #f56565; /* Tailwind red-500 */
   }
-</style> 
+</style>

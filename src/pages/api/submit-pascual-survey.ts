@@ -1,76 +1,94 @@
 import type { APIRoute } from 'astro';
 
-// This is a placeholder for the actual KV namespace binding provided by Cloudflare.
-// In a Cloudflare Pages/Workers environment, you would declare this in your wrangler.toml
-// or it would be automatically available. For local development, you'd need a way to mock this.
-// declare global {
-//   const AURA_SURVEYS_KV: KVNamespace;
-// }
+// This endpoint acts as a proxy to the external survey API
+// to handle CORS and potentially other logic.
 
-export const POST: APIRoute = async ({ request, locals }) => {
-  const kvBinding = (locals?.runtime?.env as any)?.AURA_SURVEYS_KV;
+export const prerender = false; // Ensures this is a dynamic server-rendered endpoint
 
-  // Environment variables for local fallback via Cloudflare API
-  // Astro loads .env files automatically into import.meta.env
-  const CLOUDFLARE_API_TOKEN = import.meta.env.CLOUDFLARE_API_TOKEN;
-  const CLOUDFLARE_ACCOUNT_ID = import.meta.env.CLOUDFLARE_ACCOUNT_ID;
-  const KV_NAMESPACE_ID = import.meta.env.KV_NAMESPACE_ID; // This is your specific KV namespace ID
+const EXTERNAL_API_URL = 'https://freakscode-survey-api.gabcardona.workers.dev/pascual';
+
+// Define allowed origins. For development, this might be your local dev server.
+// For production, it should be your actual domain.
+const allowedOrigins = [
+  'http://127.0.0.1:4321', // Astro dev server
+  'http://localhost:4321',  // Astro dev server (alternative)
+  // Add your production domain here when deploying
+  // e.g., 'https://your-production-site.com'
+];
+
+const corsHeaders = (origin: string | null) => {
+  const headers = new Headers();
+  if (origin && allowedOrigins.includes(origin)) {
+    headers.set('Access-Control-Allow-Origin', origin);
+  }
+  headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Added Authorization as an example, adjust if needed
+  headers.set('Access-Control-Max-Age', '86400'); // Cache preflight request for 1 day
+  return headers;
+};
+
+export const OPTIONS: APIRoute = async ({ request }) => {
+  const origin = request.headers.get('Origin');
+  return new Response(null, {
+    status: 204, // No Content
+    headers: corsHeaders(origin),
+  });
+};
+
+export const POST: APIRoute = async ({ request }) => {
+  const origin = request.headers.get('Origin');
+  const responseHeaders = corsHeaders(origin);
 
   try {
     const data = await request.json();
 
-    if (!data || typeof data !== 'object' || !data.surveyId) {
-      return new Response(JSON.stringify({ message: 'Datos inválidos o faltantes.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const submissionId = `survey-${data.surveyId}-submission-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
-    const valueToStore = JSON.stringify(data);
-
-    if (kvBinding) {
-      // Running on Cloudflare: Use KV binding
-      await kvBinding.put(submissionId, valueToStore);
-    } else if (CLOUDFLARE_API_TOKEN && CLOUDFLARE_ACCOUNT_ID && KV_NAMESPACE_ID) {
-      // Running locally (or binding not available): Use Cloudflare API
-      console.log(`Attempting to write to KV namespace ${KV_NAMESPACE_ID} via Cloudflare API (local dev mode)`);
-      const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${KV_NAMESPACE_ID}/values/${submissionId}`;
-      
-      const response = await fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
-          'Content-Type': 'text/plain', // KV expects the raw string value as the body
-        },
-        body: valueToStore,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error writing to Cloudflare KV API:', response.status, errorText);
-        throw new Error(`Cloudflare API Error (${response.status}): ${errorText}`);
-      }
-      console.log('Successfully wrote to KV via Cloudflare API');
-    } else {
-      console.error(
-        'KV namespace AURA_SURVEYS_KV is not available, and Cloudflare API credentials for local development are missing.'
-      );
-      return new Response(
-        JSON.stringify({ message: 'Servicio de guardado no disponible temporalmente (configuración incompleta).' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    return new Response(JSON.stringify({ message: 'Encuesta enviada con éxito.', submissionId }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
+    // Forward the request to the external API
+    const externalApiResponse = await fetch(EXTERNAL_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any other headers required by the external API, e.g., an API key
+        // 'Authorization': `Bearer ${YOUR_EXTERNAL_API_KEY}`
+      },
+      body: JSON.stringify(data),
     });
+
+    // Get the response body from the external API
+    const externalApiResponseBody = await externalApiResponse.json().catch(() => ({})); // Gracefully handle non-JSON or empty responses
+
+    // Set Content-Type for the response to the client
+    responseHeaders.set('Content-Type', 'application/json');
+
+    // Return the response from the external API to the client
+    return new Response(JSON.stringify(externalApiResponseBody), {
+      status: externalApiResponse.status,
+      statusText: externalApiResponse.statusText,
+      headers: responseHeaders,
+    });
+
   } catch (error: any) {
-    console.error('Error al procesar la encuesta:', error.message);
-    return new Response(JSON.stringify({ message: 'Error al procesar la encuesta.', error: error.message }), {
+    console.error('------------------------------------------------------------');
+    console.error('Error proxying survey submission to external API:');
+    console.error('Timestamp:', new Date().toISOString());
+    console.error('Error Name:', error?.name);
+    console.error('Error Message:', error?.message);
+    if (error?.cause) {
+      console.error('Error Cause:', error.cause);
+    }
+    if (error?.stack) {
+      console.error('Error Stack:', error.stack);
+    }
+    console.error('Full Error Object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    console.error('------------------------------------------------------------');
+
+    responseHeaders.set('Content-Type', 'application/json');
+    return new Response(JSON.stringify({ 
+      message: 'Error interno del servidor al procesar la encuesta.', 
+      errorDetails: error?.message || 'Unknown error',
+      errorName: error?.name || 'UnknownError'
+    }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: responseHeaders,
     });
   }
-}; 
+};

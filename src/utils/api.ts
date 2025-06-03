@@ -10,7 +10,7 @@ export const submitSurvey = async (surveyId: string, formData: Record<string, an
     const AWS_SURVEY_ENDPOINT = import.meta.env.PUBLIC_SURVEY_ENDPOINT || 
                                "https://oyvtmor2xd.execute-api.us-east-1.amazonaws.com/survey";
     
-    const CLOUDFLARE_WORKER_ENDPOINT = 'https://freakscode-survey-api.gabcardona.workers.dev/';
+    const CLOUDFLARE_WORKER_BIENESTAR_ENDPOINT = 'https://freakscode-survey-api.gabcardona.workers.dev/bienestar'; // Endpoint específico para Bienestar
 
     // Decidir qué endpoint usar basado en el tipo de survey
     const isWellnessSurvey = surveyId === "encuesta_bienestar_aura_v1";
@@ -18,8 +18,8 @@ export const submitSurvey = async (surveyId: string, formData: Record<string, an
     let targetPlatform: string;
 
     if (isWellnessSurvey) {
-        endpoint = CLOUDFLARE_WORKER_ENDPOINT;
-        targetPlatform = 'Cloudflare Worker';
+        endpoint = CLOUDFLARE_WORKER_BIENESTAR_ENDPOINT;
+        targetPlatform = 'Cloudflare Worker (Bienestar)';
     } else {
         // Para otras encuestas, usa AWS (o la lógica que prefieras)
         endpoint = AWS_SURVEY_ENDPOINT;

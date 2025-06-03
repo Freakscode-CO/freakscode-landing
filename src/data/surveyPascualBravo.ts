@@ -147,6 +147,7 @@ export const surveyPascualBravoData = {
                         "id": "correo",
                         "questionText": "¿Cuál es tu correo electrónico?",
                         "type": "email",
+                        "required": true,
                         
                     }
                 ]
