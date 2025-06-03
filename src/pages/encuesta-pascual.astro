@@ -194,12 +194,16 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('JSON Body a enviar:', jsonBody);
 
     try {
-      const response = await fetch('/api/submit-pascual-survey', { 
+      const response = await fetch('https://freakscode-survey-api.gabcardona.workers.dev/pascual', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': window.location.origin,
+          'Accept': 'application/json',
         },
         body: jsonBody, 
+        mode: 'cors',
+        credentials: 'omit',
       });
 
       const result = await response.json().catch(() => ({})); // Gracefully handle non-JSON responses
