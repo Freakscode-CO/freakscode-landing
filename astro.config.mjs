@@ -14,7 +14,7 @@ export default defineConfig({
     sitemap() // Add sitemap integration
   ],
   
-  site: 'https://freakscode.tech', // Your custom domain or GitHub Pages URL
+  site: 'https://freakscode.com', // Your custom domain or GitHub Pages URL
   base: '/freakscode-landing/',   // Set to your repository name
   
   build: {
