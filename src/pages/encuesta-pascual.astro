@@ -1,0 +1,225 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { surveyPascualBravoData, type Survey, type Block, type Question, type Option } from '../data/surveyPascualBravo.ts';
+const survey: Survey = surveyPascualBravoData.survey;
+---
+
+<Layout title={survey.title}>
+  <main class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-teal-50 py-8">
+    <section class="container mx-auto px-4">
+      <div class="text-center mb-8">
+        <img 
+          src="/images/logos/AURA-Logo.webp" 
+          alt="Logo AURA"
+          class="w-auto h-20 mx-auto mb-6"
+        />
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-purple-900 mb-2">
+          {survey.title}
+        </h1>
+        <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+          {survey.description}
+        </p>
+      </div>
+      
+      <div class="relative">
+        <div class="relative z-10 bg-white shadow-xl rounded-lg p-6 md:p-8">
+          <form class="space-y-6" id="pascualBravoSurveyForm">
+            {survey.blocks.map((block: Block, blockIndex: number) => (
+              <fieldset 
+                data-block-index={blockIndex} 
+                class="survey-block border border-gray-300 p-4 rounded-md" 
+                style={blockIndex === 0 ? '' : 'display: none;'}
+              >
+                <legend class="text-xl font-semibold text-purple-800 mb-4 px-2">{block.title}</legend>
+                <p class="text-gray-600 mb-6">{block.description}</p>
+                <div class="space-y-4">
+                  {block.questions.map((question: Question) => (
+                    <div class="flex flex-col">
+                      <label for={question.id} class="block text-sm font-medium text-gray-700 mb-1">{question.questionText} {question.required && <span class="text-red-500">*</span>}</label>
+                      {question.type === 'text' && <input type="text" id={question.id} name={question.id} required={question.required} placeholder={question.placeholder} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />}
+                      {question.type === 'number' && <input type="number" id={question.id} name={question.id} required={question.required} min={question.min} max={question.max} placeholder={question.placeholder} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />}
+                      {question.type === 'email' && <input type="email" id={question.id} name={question.id} required={question.required} placeholder={question.placeholder} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />}
+                      {question.type === 'text_area' && <textarea id={question.id} name={question.id} required={question.required} placeholder={question.placeholder} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"></textarea>}
+                      {question.type === 'select_one' && (
+                        <select id={question.id} name={question.id} required={question.required} class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                          {question.options?.map((option: Option) => (
+                            <option value={option.value.toString()}>{option.label}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
+            
+            <div id="formNavigation" class="pt-6 flex justify-between items-center">
+              <button type="button" id="prevBtn" class="inline-flex justify-center py-2 px-6 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                Anterior
+              </button>
+              <button type="button" id="nextBtn" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                Siguiente
+              </button>
+              <button type="submit" id="submitBtn" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" style="display: none;">
+                Enviar Encuesta
+              </button>
+            </div>
+            <div id="formStatusMessage" class="mt-4 text-center"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script define:vars={{ surveyId: survey.id, totalBlocks: survey.blocks.length }}>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('pascualBravoSurveyForm');
+  if (!form) return;
+
+  const blocks = form.querySelectorAll('.survey-block');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const formNavigation = document.getElementById('formNavigation');
+  const formStatusMessage = document.getElementById('formStatusMessage');
+  
+  let currentBlockIndex = 0;
+
+  function updateButtonVisibility() {
+    if (!prevBtn || !nextBtn || !submitBtn) return;
+    prevBtn.style.display = currentBlockIndex === 0 ? 'none' : 'inline-flex';
+    nextBtn.style.display = currentBlockIndex === totalBlocks - 1 ? 'none' : 'inline-flex';
+    submitBtn.style.display = currentBlockIndex === totalBlocks - 1 ? 'inline-flex' : 'none';
+  }
+
+  function showBlock(index) {
+    blocks.forEach((block, i) => {
+      block.style.display = i === index ? 'block' : 'none';
+    });
+    currentBlockIndex = index;
+    updateButtonVisibility();
+    window.scrollTo(0, 0);
+  }
+
+  prevBtn?.addEventListener('click', () => {
+    if (currentBlockIndex > 0) {
+      showBlock(currentBlockIndex - 1);
+    }
+  });
+
+  function validateCurrentBlock() {
+    const currentBlockElement = blocks[currentBlockIndex];
+    const requiredInputs = currentBlockElement.querySelectorAll('[required]');
+    let allRequiredFilled = true;
+    requiredInputs.forEach(input => {
+      if (input.type === 'radio' || input.type === 'checkbox') {
+        const groupName = input.name;
+        if (!form.querySelector(`input[name="${groupName}"]:checked`)) {
+          allRequiredFilled = false;
+          input.classList.add('border-red-500');
+        } else {
+          input.classList.remove('border-red-500');
+        }
+      } else if (!input.value.trim()) {
+        allRequiredFilled = false;
+        input.classList.add('border-red-500');
+      } else {
+        input.classList.remove('border-red-500');
+      }
+    });
+    return allRequiredFilled;
+  }
+
+  nextBtn?.addEventListener('click', () => {
+    if (!validateCurrentBlock()) {
+      formStatusMessage.textContent = 'Por favor, completa todos los campos obligatorios marcados en rojo.';
+      formStatusMessage.className = 'text-red-600 font-medium';
+      return;
+    }
+    formStatusMessage.textContent = '';
+    if (currentBlockIndex < totalBlocks - 1) {
+      showBlock(currentBlockIndex + 1);
+    }
+  });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!validateCurrentBlock()) {
+      formStatusMessage.textContent = 'Por favor, completa todos los campos obligatorios marcados en rojo.';
+      formStatusMessage.className = 'text-red-600 font-medium';
+      return;
+    }
+
+    submitBtn.setAttribute('disabled', 'true');
+    submitBtn.textContent = 'Enviando...';
+    formStatusMessage.textContent = 'Procesando su envío...';
+    formStatusMessage.className = 'text-blue-600 font-medium';
+
+    const formData = new FormData(form);
+    const dataToSubmit = { surveyId: surveyId, responses: {} };
+    formData.forEach((value, key) => {
+      if (dataToSubmit.responses[key]) {
+        if (Array.isArray(dataToSubmit.responses[key])) {
+          dataToSubmit.responses[key].push(value);
+        } else {
+          dataToSubmit.responses[key] = [dataToSubmit.responses[key], value];
+        }
+      } else {
+        dataToSubmit.responses[key] = value;
+      }
+    });
+
+    // Log para depurar el JSON que se va a enviar
+    console.log('Datos a enviar (antes de stringify):', dataToSubmit);
+    const jsonBody = JSON.stringify(dataToSubmit);
+    console.log('JSON Body a enviar:', jsonBody);
+
+    try {
+      const response = await fetch('/api/submit-pascual-survey-azure', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonBody, // Usar la variable que contiene el JSON stringified
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        formStatusMessage.textContent = result.message || '¡Encuesta enviada con éxito a Azure!';
+        formStatusMessage.className = 'text-green-600 font-medium';
+        form.reset();
+        showBlock(0);
+        formNavigation.style.display = 'none';
+      } else {
+        formStatusMessage.textContent = result.message || 'Error al enviar la encuesta a Azure. Inténtalo de nuevo.';
+        formStatusMessage.className = 'text-red-600 font-medium';
+      }
+    } catch (error) {
+      console.error('Error en el envío del formulario a Azure:', error);
+      formStatusMessage.textContent = 'Error de conexión con Azure. Por favor, verifica tu conexión e inténtalo de nuevo.';
+      formStatusMessage.className = 'text-red-600 font-medium';
+    } finally {
+      submitBtn.removeAttribute('disabled');
+      submitBtn.textContent = 'Enviar Encuesta';
+    }
+  });
+
+  // Initialize
+  showBlock(0);
+});
+</script>
+
+<style>
+  /* Optional: If you want the dot pattern from encuesta-bienestar.astro */
+  /*
+  .pattern-dots {
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  */
+  input.border-red-500, textarea.border-red-500, select.border-red-500 {
+    border-color: #f56565; /* Tailwind red-500 */
+  }
+</style> 
